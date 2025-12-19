@@ -119,24 +119,15 @@ export class CloneInfoFormat {
             }
         }
     }
-    // static fromArgs(args: { fmt: FmtArg }): CloneInfoFormat {
-    //     if (args.fmt === 'short') {
-    //         return CloneInfoFormat.short();
-    //     }
-    //     if (args.fmt === 'long') {
-    //         return CloneInfoFormat.long();
-    //     }
-    //     throw new Error(`Unknown format ${String(args.fmt)}`);
-    // }
 
     renderInfo(info: CloneInfo): string {
         // Python: f"{info.lines:{3 if self.single_line else ''}} lines, {info.tokens:3} tokens"
         // We'll emulate:
         // - singleLine => pad lines to width 3
         // - tokens always width 3
-        const linesStr = this.singleLine ? padLeft(String(info.lines), 3) : String(info.lines);
+        const linesStr = this.singleLine ? padLeft(String(info.lines), 2) : String(info.lines);
         if (info.tokens !== undefined) {
-            const tokensStr = padLeft(String(info.tokens), 3);
+            const tokensStr = padLeft(String(info.tokens), 2);
             return `${linesStr} lines, ${tokensStr} tokens`;
         }
         return `${linesStr} lines`;
