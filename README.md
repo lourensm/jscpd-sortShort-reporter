@@ -37,7 +37,8 @@ or
 ```bash
 jscpd [...options] --silent --reporters sortShort /path/to/source
 ```
-With --silent, jscpd reduces console output; depending on jscpd version, this may suppress clone logging and leave only the summary/statistics.”
+With --silent, jscpd reduces its own default console output; this will then only show the sorted 
+reporter clones together with the summary/statistics.”
 
 See the [jscpd CLI docs](https://github.com/kucherenko/jscpd/tree/master/apps/jscpd) for available options and configuration.
 
