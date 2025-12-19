@@ -1,0 +1,25 @@
+{
+  "name": "jscpd-sortShort-reporter",
+  "version": "1.0.0",
+  "description": "Test reporter for jscpd",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint src --ext .ts",
+    "format": "prettier . --check"
+  },
+  "devDependencies": {
+    "@jscpd/core": "^4.0.1",
+    "@jscpd/finder": "^4.0.1",
+    "@stylistic/eslint-plugin-ts": "^3.0.0",
+    "@types/node": "^25.0.3",
+    "@typescript-eslint/eslint-plugin": "^8.x",
+    "@typescript-eslint/parser": "^8.x",
+    "eslint": "^9.x",
+    "eslint-config-prettier": "^9.1.0",
+    "prettier": "^3.3.3",
+    "typescript": "^5.5.3",
+    "typescript-eslint": "^8.x"
+  },
+  "private": true
+}
