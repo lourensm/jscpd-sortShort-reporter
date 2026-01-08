@@ -22,11 +22,11 @@ function getPath(filePath: string, options: IOptions): string {
 function dupToCloneFileInfo(dup: IClone['duplicationA'], options: IOptions): CloneFileInfo {
     const start = tokenLocToLineCol(dup.start);
     const end = tokenLocToLineCol(dup.end);
-
     return {
         file: getPath(dup.sourceId, options),
         start, // has .line and toString()
         end,
+        duplication: dup
     };
 }
 

@@ -1,5 +1,7 @@
 // --- Types these formatters expect (minimal shape) ---
 
+import type {Duplication} from "./types";
+
 export interface LineColLike {
     line: number;
     column: number | undefined;
@@ -19,6 +21,7 @@ export interface CloneFileInfo {
     file: string;
     start: LineColLike;
     end: LineColLike;
+    duplication: Duplication;
 }
 
 export interface CloneInfo {
@@ -33,6 +36,7 @@ export interface CloneInfo {
 export enum SnippetPosFormat {
     SHORT = 'short',
     LONG = 'long',
+    ONLY_INFO = 'only_info',
 }
 
 export function renderSnippetPos(format: SnippetPosFormat,
@@ -97,22 +101,29 @@ export class CloneFileInfoFormat {
 // --- CloneInfoFormat ---
 
 // export type FmtArg = 'short' | 'long';
+export enum CloneLayout {
+    SingleLine = "single",
+    MultiLine = "multi",
+    OnlyInfo = "onlyInfo",
+}
 
 export class CloneInfoFormat {
     public fileFormat: CloneFileInfoFormat;
-    public singleLine: boolean;
+    public layout: CloneLayout;
 
-    constructor(fileFormat: CloneFileInfoFormat, singleLine: boolean) {
+    constructor(fileFormat: CloneFileInfoFormat, layout: CloneLayout) {
         this.fileFormat = fileFormat;
-        this.singleLine = singleLine;
+        this.layout = layout;
     }
 
     static standard(format: SnippetPosFormat): CloneInfoFormat {
         switch (format) {
             case SnippetPosFormat.SHORT:
-                return new CloneInfoFormat(CloneFileInfoFormat.short(), true);
+                return new CloneInfoFormat(CloneFileInfoFormat.short(), CloneLayout.SingleLine);
             case SnippetPosFormat.LONG:
-                return new CloneInfoFormat(CloneFileInfoFormat.long(), false);
+                return new CloneInfoFormat(CloneFileInfoFormat.long(), CloneLayout.MultiLine);
+            case SnippetPosFormat.ONLY_INFO:
+                return new CloneInfoFormat(CloneFileInfoFormat.long(), CloneLayout.OnlyInfo);
             default: {
                 // defensive; TS enum exhaustiveness usually makes this unreachable
                 throw new Error(`Unknown format`);
@@ -125,7 +136,9 @@ export class CloneInfoFormat {
         // We'll emulate:
         // - singleLine => pad lines to width 3
         // - tokens always width 3
-        const linesStr = this.singleLine ? padLeft(String(info.lines), 2) : String(info.lines);
+        const linesStr = this.layout === CloneLayout.SingleLine
+            ? padLeft(String(info.lines), 2)
+            : String(info.lines);
         if (info.tokens !== undefined) {
             const tokensStr = padLeft(String(info.tokens), 2);
             return `${linesStr} lines, ${tokensStr} tokens`;
@@ -135,16 +148,17 @@ export class CloneInfoFormat {
 
     render(info: CloneInfo): string {
         const fmt = this.fileFormat;
-
-        if (this.singleLine) {
-            return `${this.renderInfo(info)} — ${fmt.render(info.info1)} - ${fmt.render(info.info2)}`;
+        switch (this.layout) {
+            case CloneLayout.SingleLine:
+                return `${this.renderInfo(info)} — ${fmt.render(info.info1)} - ${fmt.render(info.info2)}`;
+            case CloneLayout.MultiLine:
+                return `${fmt.render(info.info1)} ` +
+                    `(${this.renderInfo(info)})\n` +
+                    `${fmt.render(info.info2)}\n`
+                ;
+                case CloneLayout.OnlyInfo:
+                    return `${this.renderInfo(info)}`
         }
-
-        return (
-            `${fmt.render(info.info1)} ` +
-            `(${this.renderInfo(info)})\n` +
-            `${fmt.render(info.info2)}\n`
-        );
     }
 
     adjustWidth(cloneInfos: CloneInfo[]): void {

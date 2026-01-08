@@ -28,6 +28,22 @@ npm link
 ```
 You can undo with `npm unlink jscpd-sortShort-reporter` (sometimes `npm unlink -g jscpd-sortShort-reporter`), depending on your npm version/setup.
 
+Be careful: the author of these instructions is almost completely ignorant about npm internals.
+These steps are based on what happened to work in this setup, not on a deep understanding of
+npm’s global/link mechanisms. Repeating them blindly may lead to confusing or broken global state.
+
+When you edit ts files locally and wish to update given the above situation,
+only run 
+```shell
+npm run build
+```
+if you used a symlink-based global link.
+
+if you had it installed repeat:
+```shell
+npm install -g .
+```
+
 ### Usage
 
 ```shell
