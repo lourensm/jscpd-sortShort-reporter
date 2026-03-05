@@ -2,6 +2,17 @@
 
 A sorted short format reporter for [jscpd](https://github.com/kucherenko/jscpd).
 
+## Status
+
+I stopped actively using `jscpd` because it produced clone reports that were not reliable enough for my workflow (too many misses / noise for the kind of refactoring decisions I wanted to make).
+
+These days I use **PMD CPD** instead, and post-process the XML output with a small XSLT script:
+
+```sh
+pmd cpd --ignore-identifiers --minimum-tokens 25 --language swift --format xml $(ALLSWIFTNOPARSER) \
+  | xsltproc cpd-sort-text.xslt -
+```
+
 
 ## Getting started
 
