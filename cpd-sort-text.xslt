@@ -2,6 +2,7 @@
 <!--
 Used to sort PMD CPD XML output by clone size and location.
 
+
 Example usage (flags shortened to avoid XML comment restriction):
 
 pmd cpd [ignore-identifiers] [minimum-tokens 25] ...
